@@ -18,16 +18,14 @@
 </head>
 <body class="text-slate-100 min-h-screen pb-28 selection:bg-emerald-500 selection:text-slate-950">
 
-    <!-- Credit Banner -->
     <div class="bg-gradient-to-r from-emerald-950 via-teal-900 to-amber-950 border-b border-emerald-500/40 py-2.5 px-4 text-center shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex items-center justify-center gap-2 text-xs font-bold tracking-wider text-emerald-300">
             <i class="fa-solid fa-code text-amber-400 animate-pulse"></i>
-            <span>พัฒนาระบบโดย <span class="text-amber-300 font-black underline decoration-emerald-500/60 underline-offset-4">Supakit Ketsuwan</span></span>[cite: 1]
+            <span>พัฒนาระบบโดย <span class="text-amber-300 font-black underline decoration-emerald-500/60 underline-offset-4">Supakit Ketsuwan</span></span>
             <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
         </div>
     </div>
 
-    <!-- Header Navbar -->
     <header class="bg-slate-900/90 border-b border-emerald-900/50 py-4 px-5 flex justify-between items-center shadow-xl">
         <div>
             <h1 class="text-xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-400 bg-clip-text text-transparent flex items-center gap-2">
@@ -44,8 +42,6 @@
     </header>
 
     <main class="container mx-auto px-4 py-6 max-w-2xl space-y-6">
-
-        <!-- Section 1: เลือกอัลบั้ม & เลือกรูป -->
         <section class="bg-slate-900/80 rounded-3xl p-5 shadow-2xl border border-slate-800 backdrop-blur-xl glow-emerald">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
                 <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
@@ -63,7 +59,6 @@
             <div id="photoGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-5"></div>
         </section>
 
-        <!-- Section 2: กรอกข้อมูลผู้สั่งซื้อ -->
         <section class="bg-slate-900/80 rounded-3xl p-5 shadow-2xl border border-slate-800 backdrop-blur-xl">
             <h2 class="text-lg font-bold text-emerald-400 mb-4 pb-3 border-b border-slate-800 flex items-center gap-2">
                 <span class="bg-emerald-500 text-slate-950 w-7 h-7 rounded-full flex items-center justify-center text-sm font-black shadow">2</span>
@@ -96,15 +91,12 @@
                             <span class="text-sm font-bold text-slate-100">อีเมล (Email)</span>
                         </label>
                     </div>
-
                     <input type="text" id="contactInfo" placeholder="กรอก Line ID เช่น somchai_line" class="w-full px-4 py-3 bg-slate-950 border-2 border-slate-700 rounded-xl text-slate-100 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-amber-500">
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- Bottom Sticky Payment Bar -->
     <div class="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 p-4 backdrop-blur-md z-40 shadow-2xl">
         <div class="container mx-auto max-w-2xl flex items-center justify-between gap-4">
             <div>
@@ -118,7 +110,6 @@
         </div>
     </div>
 
-    <!-- Modal QR Code + แนบสลิป -->
     <div id="paymentModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center z-50 p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-emerald-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl text-center space-y-4 my-auto">
             <div class="text-emerald-400 text-base font-black flex items-center justify-center gap-2">
@@ -162,7 +153,6 @@
         </div>
     </div>
 
-    <!-- Modal ตรวจสอบสถานะคำสั่งซื้อสำหรับลูกค้า -->
     <div id="trackModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center z-50 p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-emerald-800 rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4 my-auto">
             <div class="flex justify-between items-center pb-3 border-b border-slate-800">
@@ -188,32 +178,23 @@
 
     <script>
         const PRICE_PER_PHOTO = 15;
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw53pMCyyqVaU7DW5B9M0tDSWJrBZyyeSH1RaToh1PtwLcbpTITnb-r9ZsUl9fXJ59PGg/exec"; // 🔥 ลิงก์ Web App ล่าสุด
-        const localChannel = new BroadcastChannel('kiosk_photo_23y');
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySeYLHWMKwsUFXHBh7YPL2klD3Fs0QW8Qeo_xbyqFhVm2JvTDXsjqdPMhB64eHbcp7Pg/exec";
 
-        let albumsData = JSON.parse(localStorage.getItem('kiosk_albums') || '{}');
+        let albumsData = {};
         let activeAlbumId = null;
         let selectedPhotosState = {}; 
         let currentContactType = 'Line ID';
         let uploadedSlipBase64 = '';
 
-        localChannel.postMessage({ type: 'REQUEST_DATA' });
-
-        localChannel.onmessage = function(event) {
-            if (event.data) {
-                if (event.data.type === 'ALBUMS_UPDATED') {
-                    albumsData = event.data.albums || {};
-                    renderAlbumTabs();
-                }
-            }
-        };
-
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'kiosk_albums') {
-                albumsData = JSON.parse(e.newValue || '{}');
+        function loadDataFromCloud() {
+            fetch(WEB_APP_URL)
+            .then(res => res.json())
+            .then(data => {
+                albumsData = data.albums || {};
                 renderAlbumTabs();
-            }
-        });
+            })
+            .catch(err => console.error('Error loading data:', err));
+        }
 
         function renderAlbumTabs() {
             const tabsContainer = document.getElementById('albumTabs');
@@ -477,7 +458,8 @@
             container.innerHTML = html;
         }
 
-        renderAlbumTabs();
+        loadDataFromCloud();
+        setInterval(loadDataFromCloud, 10000);
     </script>
 </body>
 </html>
