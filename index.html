@@ -394,10 +394,6 @@
                 body: JSON.stringify(orderData)
             })
             .then(() => {
-                let orders = JSON.parse(localStorage.getItem('kiosk_orders') || '{}');
-                orders[orderId] = orderData;
-                localStorage.setItem('kiosk_orders', JSON.stringify(orders));
-
                 alert('ส่งคำสั่งซื้อและสลิปเรียบร้อย! ทีมงานได้รับออเดอร์ของคุณแล้ว');
                 location.reload();
             })
@@ -422,40 +418,56 @@
             const container = document.getElementById('trackResultContainer');
             if (!keyword) { alert('กรุณากรอกชื่อเล่นหรือช่องทางติดต่อเพื่อค้นหา'); return; }
 
-            let orders = JSON.parse(localStorage.getItem('kiosk_orders') || '{}');
-            let matched = Object.values(orders).filter(o => 
-                (o.nickname && o.nickname.toLowerCase().includes(keyword)) || 
-                (o.contact && o.contact.toLowerCase().includes(keyword))
-            );
+            container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs font-bold">กำลังค้นหาข้อมูลจากระบบออนไลน์...</div>`;
 
-            if (matched.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs font-bold">ไม่พบประวัติคำสั่งซื้อที่ตรงกับ "${keyword}"</div>`;
-                return;
-            }
+            fetch(WEB_APP_URL)
+            .then(res => res.json())
+            .then(data => {
+                let ordersList = data.orders || [];
+                let matched = ordersList.filter(o => 
+                    (o["ชื่อเล่น"] && String(o["ชื่อเล่น"]).toLowerCase().includes(keyword)) || 
+                    (o["ข้อมูลติดต่อ"] && String(o["ข้อมูลติดต่อ"]).toLowerCase().includes(keyword))
+                );
 
-            let html = '';
-            matched.reverse().forEach(order => {
-                let statusBadge = '';
-                if(order.status === 'pending') statusBadge = '<span class="bg-amber-950 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🟡 รอดำเนินการ</span>';
-                else if(order.status === 'sending') statusBadge = '<span class="bg-blue-950 text-blue-400 border border-blue-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🔵 กำลังส่งไฟล์รูป</span>';
-                else if(order.status === 'success') statusBadge = '<span class="bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🟢 จัดส่งเรียบร้อยแล้ว</span>';
+                if (matched.length === 0) {
+                    container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs font-bold">ไม่พบประวัติคำสั่งซื้อที่ตรงกับ "${keyword}"</div>`;
+                    return;
+                }
 
-                html += `
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 space-y-2">
-                        <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                            <div>
-                                <span class="text-sm font-bold text-amber-300">${order.nickname}</span> (${order.batchNo})
+                let html = '';
+                matched.reverse().forEach(order => {
+                    let currentStatus = order["สถานะ"] || 'pending';
+                    let statusBadge = '';
+                    
+                    if(currentStatus === 'pending') {
+                        statusBadge = '<span class="bg-amber-950 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🟡 รอดำเนินการ</span>';
+                    } else if(currentStatus === 'sending') {
+                        statusBadge = '<span class="bg-blue-950 text-blue-400 border border-blue-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🔵 กำลังส่งไฟล์รูป</span>';
+                    } else if(currentStatus === 'success') {
+                        statusBadge = '<span class="bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🟢 จัดส่งเรียบร้อยแล้ว</span>';
+                    }
+
+                    html += `
+                        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 space-y-2">
+                            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                                <div>
+                                    <span class="text-sm font-bold text-amber-300">${order["ชื่อเล่น"] || '-'}</span> (${order["รุ่น"] || '-'})
+                                </div>
+                                <div>${statusBadge}</div>
                             </div>
-                            <div>${statusBadge}</div>
+                            <div class="text-[11px] text-slate-300 flex justify-between">
+                                <span>ยอดชำระ: <strong class="text-emerald-400">${Number(order["ยอดเงิน"] || 0).toLocaleString()} บาท</strong></span>
+                                <span class="text-slate-400">เวลา: ${order["เวลา"] || '-'}</span>
+                            </div>
                         </div>
-                        <div class="text-[11px] text-slate-300 flex justify-between">
-                            <span>ยอดชำระ: <strong class="text-emerald-400">${order.price} บาท</strong></span>
-                            <span class="text-slate-400">เวลา: ${order.time}</span>
-                        </div>
-                    </div>
-                `;
+                    `;
+                });
+                container.innerHTML = html;
+            })
+            .catch(err => {
+                console.error(err);
+                container.innerHTML = `<div class="text-center py-8 text-red-400 text-xs font-bold">เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง</div>`;
             });
-            container.innerHTML = html;
         }
 
         loadDataFromCloud();
