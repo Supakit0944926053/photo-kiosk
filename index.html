@@ -188,7 +188,7 @@
 
     <script>
         const PRICE_PER_PHOTO = 15;
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwwtNimQbp7jijPv7cvKoce3TFcuZSqxnxqf7WjnVawjgQc_o58KOoQ0lNtLUIjAtzjpg/exec"; // 🔥 ใส่ลิงก์ Google Sheets Web App เรียบร้อยแล้ว
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw53pMCyyqVaU7DW5B9M0tDSWJrBZyyeSH1RaToh1PtwLcbpTITnb-r9ZsUl9fXJ59PGg/exec"; // 🔥 ลิงก์ Web App ล่าสุด
         const localChannel = new BroadcastChannel('kiosk_photo_23y');
 
         let albumsData = JSON.parse(localStorage.getItem('kiosk_albums') || '{}');
@@ -375,7 +375,6 @@
             reader.readAsDataURL(file);
         }
 
-        // 🚀 ฟังก์ชันยืนยันการโอนและส่งข้อมูลเข้า Google Sheets ออนไลน์
         function confirmOrder() {
             const nickname = document.getElementById('nickname').value.trim();
             const batchNo = document.getElementById('batchNo').value.trim();
@@ -407,7 +406,6 @@
 
             alert('กำลังส่งคำสั่งซื้อและสลิปไปยังระบบ...');
 
-            // ส่งข้อมูลไปยัง Google Sheets Web App
             fetch(WEB_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -415,7 +413,6 @@
                 body: JSON.stringify(orderData)
             })
             .then(() => {
-                // บันทึกลง localStorage ของเครื่องลูกค้าไว้ดูประวัติในปุ่มเช็คสถานะด้วย
                 let orders = JSON.parse(localStorage.getItem('kiosk_orders') || '{}');
                 orders[orderId] = orderData;
                 localStorage.setItem('kiosk_orders', JSON.stringify(orders));
