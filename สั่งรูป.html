@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือกซื้อรูปถ่ายในงาน - ชมรมปัญญาชน คนสร้างฝัน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #080d1a; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        .glow-emerald { box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3); }
+        .glow-amber { box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.3); }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen pb-28 selection:bg-emerald-500 selection:text-slate-950">
+
+    <!-- Credit Banner -->
+    <div class="bg-gradient-to-r from-emerald-950 via-teal-900 to-amber-950 border-b border-emerald-500/40 py-2.5 px-4 text-center shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex items-center justify-center gap-2 text-xs font-bold tracking-wider text-emerald-300">
+            <i class="fa-solid fa-code text-amber-400 animate-pulse"></i>
+            <span>พัฒนาระบบโดย <span class="text-amber-300 font-black underline decoration-emerald-500/60 underline-offset-4">Supakit Ketsuwan</span></span>[cite: 1]
+            <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
+        </div>
+    </div>
+
+    <!-- Header Navbar -->
+    <header class="bg-slate-900/90 border-b border-emerald-900/50 py-4 px-5 flex justify-between items-center shadow-xl">
+        <div>
+            <h1 class="text-xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-400 bg-clip-text text-transparent flex items-center gap-2">
+                <i class="fa-solid fa-images text-amber-400"></i>
+                เลือกซื้อรูปถ่ายภายในงาน
+            </h1>
+            <p class="text-xs text-emerald-200/80 mt-0.5">งานครบรอบ 23 ปีชมรม • ปัญญาชน คนสร้างฝัน</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="openTrackModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow flex items-center gap-1.5 cursor-pointer transition-all">
+                <i class="fa-solid fa-truck-fast text-amber-300"></i> เช็คสถานะ
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+
+        <!-- Section 1: เลือกอัลบั้ม & เลือกรูป -->
+        <section class="bg-slate-900/80 rounded-3xl p-5 shadow-2xl border border-slate-800 backdrop-blur-xl glow-emerald">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
+                    <span class="bg-emerald-500 text-slate-950 w-7 h-7 rounded-full flex items-center justify-center text-sm font-black shadow">1</span>
+                    เลือกรูปถ่ายที่ต้องการซื้อ
+                </h2>
+                <span class="text-xs font-semibold text-amber-400 bg-amber-950/60 px-2.5 py-1 rounded-lg border border-amber-500/30">15 บาท / ใบ</span>
+            </div>
+
+            <div class="mb-5">
+                <label class="block text-xs font-bold text-slate-400 mb-2">เลือกดูตามอัลบั้มภาพ:</label>
+                <div id="albumTabs" class="flex items-center gap-2 overflow-x-auto pb-2"></div>
+            </div>
+
+            <div id="photoGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-5"></div>
+        </section>
+
+        <!-- Section 2: กรอกข้อมูลผู้สั่งซื้อ -->
+        <section class="bg-slate-900/80 rounded-3xl p-5 shadow-2xl border border-slate-800 backdrop-blur-xl">
+            <h2 class="text-lg font-bold text-emerald-400 mb-4 pb-3 border-b border-slate-800 flex items-center gap-2">
+                <span class="bg-emerald-500 text-slate-950 w-7 h-7 rounded-full flex items-center justify-center text-sm font-black shadow">2</span>
+                กรอกข้อมูลผู้สั่งซื้อ
+            </h2>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="nickname" class="block text-sm font-bold text-slate-200 mb-1">ชื่อเล่น <span class="text-amber-400">*</span></label>
+                        <input type="text" id="nickname" placeholder="เช่น พี่เอก, น้องส้ม" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label for="batchNo" class="block text-sm font-bold text-slate-200 mb-1">รุ่นที่เท่าไหร่ <span class="text-amber-400">*</span></label>
+                        <input type="text" id="batchNo" placeholder="เช่น รุ่น 12, รุ่น 23" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-200 mb-2">เลือกช่องทางรับไฟล์รูปภาพ <span class="text-amber-400">*</span></label>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <label onclick="toggleContactType('line')" class="flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-950 border-2 border-emerald-500 cursor-pointer" id="labelContactLine">
+                            <input type="radio" name="contactType" value="Line ID" checked class="w-4 h-4 accent-emerald-500">
+                            <i class="fa-brands fa-line text-emerald-400 text-xl"></i>
+                            <span class="text-sm font-bold text-slate-100">Line ID</span>
+                        </label>
+                        <label onclick="toggleContactType('email')" class="flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-950 border-2 border-slate-800 cursor-pointer" id="labelContactEmail">
+                            <input type="radio" name="contactType" value="Email" class="w-4 h-4 accent-amber-500">
+                            <i class="fa-solid fa-envelope text-amber-400 text-xl"></i>
+                            <span class="text-sm font-bold text-slate-100">อีเมล (Email)</span>
+                        </label>
+                    </div>
+
+                    <input type="text" id="contactInfo" placeholder="กรอก Line ID เช่น somchai_line" class="w-full px-4 py-3 bg-slate-950 border-2 border-slate-700 rounded-xl text-slate-100 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-amber-500">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Sticky Payment Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 p-4 backdrop-blur-md z-40 shadow-2xl">
+        <div class="container mx-auto max-w-2xl flex items-center justify-between gap-4">
+            <div>
+                <div class="text-xs text-slate-400">สั่งรวม <span id="totalSelectedPhotos" class="text-emerald-400 font-bold">0</span> ใบ</div>
+                <div class="text-2xl font-black text-emerald-400"><span id="grandTotal">0</span> <span class="text-xs font-normal text-slate-400">บาท</span></div>
+            </div>
+            <button type="button" onclick="openPaymentModal()" class="px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black rounded-xl shadow-lg flex items-center gap-2 text-sm active:scale-95 transition-all cursor-pointer">
+                <i class="fa-solid fa-qrcode text-amber-300 text-base"></i>
+                <span>สแกนจ่ายเงิน</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal QR Code + แนบสลิป -->
+    <div id="paymentModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-emerald-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl text-center space-y-4 my-auto">
+            <div class="text-emerald-400 text-base font-black flex items-center justify-center gap-2">
+                <i class="fa-solid fa-qrcode text-amber-400 text-lg"></i>
+                <span>สแกนชำระเงินค่ารูปถ่าย</span>
+            </div>
+
+            <div class="bg-white p-2.5 rounded-2xl inline-block border border-slate-200 shadow-md">
+                <img id="qrCodeImg" src="" alt="QR Code" class="w-40 h-40 mx-auto object-contain">
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-1 text-left">
+                <div class="text-center pb-2 border-b border-slate-800 mb-1">
+                    <div class="text-slate-400">ยอดชำระเงินสุทธิ</div>
+                    <div class="text-2xl font-black text-emerald-400"><span id="modalAmount">0</span> บาท</div>
+                </div>
+                <div class="text-slate-200"><span class="text-slate-400">ชื่อผู้สั่ง:</span> <span id="modalNickname" class="font-bold text-amber-300"></span> (<span id="modalBatch" class="text-emerald-300 font-bold"></span>)</div>
+                <div class="text-slate-200 truncate"><span class="text-slate-400">ช่องทางรับรูป (<span id="modalContactLabel"></span>):</span> <span id="modalContact" class="text-emerald-400 font-bold"></span></div>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-2">
+                <label class="block text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
+                    แนบสลิปการโอนเงิน <span class="text-red-400">*</span>
+                </label>
+                <input type="file" id="slipInput" accept="image/*" class="hidden" onchange="previewSlip(event)">
+                <label for="slipInput" class="flex flex-col items-center justify-center p-3 border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-xl bg-slate-900 cursor-pointer transition-all">
+                    <div id="slipUploadPlaceholder" class="text-center space-y-1">
+                        <i class="fa-solid fa-cloud-arrow-up text-xl text-emerald-400"></i>
+                        <span class="text-xs text-slate-300 block font-bold">กดตรงนี้เพื่อเลือกรูปสลิป</span>
+                        <span class="text-[10px] text-slate-500 block">รองรับไฟล์ภาพ JPG, PNG</span>
+                    </div>
+                    <img id="slipPreviewImg" src="" class="hidden w-full max-h-40 object-contain rounded-lg shadow">
+                </label>
+            </div>
+
+            <div class="flex gap-2.5 pt-1">
+                <button type="button" onclick="closePaymentModal()" class="w-1/2 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs cursor-pointer">ยกเลิก</button>
+                <button type="button" onclick="confirmOrder()" class="w-1/2 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl text-xs shadow-lg cursor-pointer">ยืนยันการโอน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal ตรวจสอบสถานะคำสั่งซื้อสำหรับลูกค้า -->
+    <div id="trackModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-emerald-800 rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4 my-auto">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+                <h3 class="text-base font-bold text-amber-300 flex items-center gap-2">
+                    <i class="fa-solid fa-truck-fast text-emerald-400"></i> ติดตามสถานะคำสั่งซื้อ
+                </h3>
+                <button type="button" onclick="closeTrackModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 hover:bg-red-600 hover:text-white flex items-center justify-center text-xs cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">ค้นหาด้วย (ชื่อเล่น หรือ Line ID / อีเมล):</label>
+                <div class="flex gap-2">
+                    <input type="text" id="searchKeyword" placeholder="เช่น พี่เอก หรือ somchai_line" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <button type="button" onclick="searchMyOrders()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs cursor-pointer shadow">ค้นหา</button>
+                </div>
+            </div>
+
+            <div id="trackResultContainer" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+                <div class="text-center py-8 text-slate-500 text-xs font-bold">พิมพ์ชื่อหรือช่องทางติดต่อเพื่อค้นหาประวัติคำสั่งซื้อของคุณ</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PRICE_PER_PHOTO = 15;
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwwtNimQbp7jijPv7cvKoce3TFcuZSqxnxqf7WjnVawjgQc_o58KOoQ0lNtLUIjAtzjpg/exec"; // 🔥 ใส่ลิงก์ Google Sheets Web App เรียบร้อยแล้ว
+        const localChannel = new BroadcastChannel('kiosk_photo_23y');
+
+        let albumsData = JSON.parse(localStorage.getItem('kiosk_albums') || '{}');
+        let activeAlbumId = null;
+        let selectedPhotosState = {}; 
+        let currentContactType = 'Line ID';
+        let uploadedSlipBase64 = '';
+
+        localChannel.postMessage({ type: 'REQUEST_DATA' });
+
+        localChannel.onmessage = function(event) {
+            if (event.data) {
+                if (event.data.type === 'ALBUMS_UPDATED') {
+                    albumsData = event.data.albums || {};
+                    renderAlbumTabs();
+                }
+            }
+        };
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'kiosk_albums') {
+                albumsData = JSON.parse(e.newValue || '{}');
+                renderAlbumTabs();
+            }
+        });
+
+        function renderAlbumTabs() {
+            const tabsContainer = document.getElementById('albumTabs');
+            const albumKeys = Object.keys(albumsData);
+
+            if (albumKeys.length === 0) {
+                tabsContainer.innerHTML = `<div class="text-xs text-slate-500 font-bold">ยังไม่มีอัลบั้มรูปภาพในขณะนี้</div>`;
+                document.getElementById('photoGrid').innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 font-bold">ยังไม่มีรูปถ่ายอัปโหลดในระบบ</div>`;
+                return;
+            }
+
+            if (!activeAlbumId || !albumsData[activeAlbumId]) {
+                activeAlbumId = albumKeys[0]; 
+            }
+
+            let tabsHtml = '';
+            albumKeys.forEach(id => {
+                const album = albumsData[id];
+                const isActive = id === activeAlbumId;
+                tabsHtml += `
+                    <button type="button" onclick="selectAlbumTab('${id}')" class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${isActive ? 'bg-emerald-500 text-slate-950 shadow-lg' : 'bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/50'}">
+                        <i class="fa-solid fa-folder-open mr-1.5"></i>${album.name}
+                    </button>
+                `;
+            });
+
+            tabsContainer.innerHTML = tabsHtml;
+            renderPhotosGrid();
+        }
+
+        function selectAlbumTab(albumId) {
+            activeAlbumId = albumId;
+            renderAlbumTabs();
+        }
+
+        function renderPhotosGrid() {
+            const grid = document.getElementById('photoGrid');
+            const currentAlbum = albumsData[activeAlbumId];
+
+            if (!currentAlbum || !currentAlbum.photos || Object.keys(currentAlbum.photos).length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 font-bold">อัลบั้มนี้ยังไม่มีรูปถ่าย</div>`;
+                return;
+            }
+
+            let gridHtml = '';
+            Object.entries(currentAlbum.photos).forEach(([photoId, photo]) => {
+                const qty = selectedPhotosState[photoId]?.qty || 0;
+                gridHtml += `
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col relative">
+                        <div class="relative w-full bg-slate-900 flex items-center justify-center p-2 min-h-[220px]">
+                            <img src="${photo.url}" class="w-full h-auto max-h-[350px] object-contain rounded-xl shadow">
+                            <div class="absolute top-3 right-3 bg-slate-950/90 px-2.5 py-1 rounded-full text-xs font-black text-amber-400 border border-amber-500/40 shadow-md">
+                                ${photo.code || photoId}
+                            </div>
+                        </div>
+                        <div class="p-4 flex items-center justify-between bg-slate-900 border-t border-slate-800">
+                            <div>
+                                <span class="text-sm font-bold text-slate-100 block truncate max-w-[120px]">${photo.name || 'รูปภาพในงาน'}</span>
+                                <span class="text-xs text-amber-400 font-bold">${PRICE_PER_PHOTO} บาท / ใบ</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="updateQty('${photoId}', '${photo.name || photo.code}', '${photo.url}', -1)" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-100 font-black text-xl flex items-center justify-center active:scale-95 cursor-pointer shadow">-</button>
+                                <span id="qty-${photoId}" class="w-7 text-center font-black text-emerald-400 text-lg">${qty}</span>
+                                <button type="button" onclick="updateQty('${photoId}', '${photo.name || photo.code}', '${photo.url}', 1)" class="w-9 h-9 rounded-xl bg-emerald-600 text-white font-black text-xl flex items-center justify-center active:scale-95 cursor-pointer shadow">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = gridHtml;
+        }
+
+        function updateQty(photoId, photoName, photoUrl, delta) {
+            if (!selectedPhotosState[photoId]) {
+                selectedPhotosState[photoId] = { name: photoName, url: photoUrl, qty: 0 };
+            }
+            selectedPhotosState[photoId].qty = Math.max(0, selectedPhotosState[photoId].qty + delta);
+            
+            const qtyElem = document.getElementById(`qty-${photoId}`);
+            if (qtyElem) qtyElem.textContent = selectedPhotosState[photoId].qty;
+            
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let totalPhotos = 0;
+            Object.values(selectedPhotosState).forEach(p => { totalPhotos += p.qty; });
+            document.getElementById('totalSelectedPhotos').textContent = totalPhotos;
+            const totalPrice = totalPhotos * PRICE_PER_PHOTO;
+            document.getElementById('grandTotal').textContent = totalPrice.toLocaleString();
+            return totalPrice;
+        }
+
+        function toggleContactType(type) {
+            currentContactType = type === 'line' ? 'Line ID' : 'Email';
+            document.getElementById('labelContactLine').className = type === 'line' ? "flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-950 border-2 border-emerald-500 cursor-pointer" : "flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-950 border-2 border-slate-800 cursor-pointer";
+            document.getElementById('labelContactEmail').className = type === 'email' ? "flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-950 border-2 border-amber-500 cursor-pointer" : "flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-950 border-2 border-slate-800 cursor-pointer";
+            document.getElementById('contactInfo').placeholder = type === 'line' ? "กรอก Line ID เช่น somchai_line" : "กรอก Email เช่น somchai@gmail.com";
+        }
+
+        function openPaymentModal() {
+            const nickname = document.getElementById('nickname').value.trim();
+            const batchNo = document.getElementById('batchNo').value.trim();
+            const contact = document.getElementById('contactInfo').value.trim();
+            const totalPrice = calculateTotal();
+
+            if (totalPrice === 0) { alert('กรุณากดเลือกรูปอย่างน้อย 1 ใบ'); return; }
+            if (!nickname || !batchNo || !contact) { alert('กรุณากรอกข้อมูลผู้สั่งซื้อให้ครบถ้วน'); return; }
+
+            document.getElementById('modalAmount').textContent = totalPrice.toLocaleString();
+            document.getElementById('modalNickname').textContent = nickname;
+            document.getElementById('modalBatch').textContent = batchNo;
+            document.getElementById('modalContactLabel').textContent = currentContactType;
+            document.getElementById('modalContact').textContent = contact;
+            document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PROMPTPAY_PAYMENT_${totalPrice}`;
+
+            document.getElementById('paymentModal').classList.remove('hidden');
+            document.getElementById('paymentModal').classList.add('flex');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+            document.getElementById('paymentModal').classList.remove('flex');
+        }
+
+        function previewSlip(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            compressSlipImage(file, 600, 0.7, function(base64) {
+                uploadedSlipBase64 = base64;
+                const img = document.getElementById('slipPreviewImg');
+                const placeholder = document.getElementById('slipUploadPlaceholder');
+                img.src = base64;
+                img.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            });
+        }
+
+        function compressSlipImage(file, maxWidth, quality, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width, height = img.height;
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 🚀 ฟังก์ชันยืนยันการโอนและส่งข้อมูลเข้า Google Sheets ออนไลน์
+        function confirmOrder() {
+            const nickname = document.getElementById('nickname').value.trim();
+            const batchNo = document.getElementById('batchNo').value.trim();
+            const contact = document.getElementById('contactInfo').value.trim();
+
+            if (!uploadedSlipBase64) {
+                alert('กรุณาแนบรูปสลิปการโอนเงินก่อนยืนยันครับ');
+                return;
+            }
+
+            const orderId = 'ORD_' + Date.now();
+            const finalPhotos = {};
+            Object.entries(selectedPhotosState).forEach(([id, p]) => {
+                if (p.qty > 0) finalPhotos[id] = p;
+            });
+
+            const orderData = {
+                id: orderId,
+                nickname: nickname,
+                batchNo: batchNo,
+                contactType: currentContactType,
+                contact: contact,
+                photos: finalPhotos,
+                price: calculateTotal(),
+                slipUrl: uploadedSlipBase64,
+                status: 'pending',
+                time: new Date().toLocaleTimeString('th-TH')
+            };
+
+            alert('กำลังส่งคำสั่งซื้อและสลิปไปยังระบบ...');
+
+            // ส่งข้อมูลไปยัง Google Sheets Web App
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            })
+            .then(() => {
+                // บันทึกลง localStorage ของเครื่องลูกค้าไว้ดูประวัติในปุ่มเช็คสถานะด้วย
+                let orders = JSON.parse(localStorage.getItem('kiosk_orders') || '{}');
+                orders[orderId] = orderData;
+                localStorage.setItem('kiosk_orders', JSON.stringify(orders));
+
+                alert('ส่งคำสั่งซื้อและสลิปเรียบร้อย! ทีมงานได้รับออเดอร์ของคุณแล้ว');
+                location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง');
+            });
+        }
+
+        function openTrackModal() {
+            document.getElementById('trackModal').classList.remove('hidden');
+            document.getElementById('trackModal').classList.add('flex');
+        }
+
+        function closeTrackModal() {
+            document.getElementById('trackModal').classList.add('hidden');
+            document.getElementById('trackModal').classList.remove('flex');
+        }
+
+        function searchMyOrders() {
+            const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
+            const container = document.getElementById('trackResultContainer');
+            if (!keyword) { alert('กรุณากรอกชื่อเล่นหรือช่องทางติดต่อเพื่อค้นหา'); return; }
+
+            let orders = JSON.parse(localStorage.getItem('kiosk_orders') || '{}');
+            let matched = Object.values(orders).filter(o => 
+                (o.nickname && o.nickname.toLowerCase().includes(keyword)) || 
+                (o.contact && o.contact.toLowerCase().includes(keyword))
+            );
+
+            if (matched.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs font-bold">ไม่พบประวัติคำสั่งซื้อที่ตรงกับ "${keyword}"</div>`;
+                return;
+            }
+
+            let html = '';
+            matched.reverse().forEach(order => {
+                let statusBadge = '';
+                if(order.status === 'pending') statusBadge = '<span class="bg-amber-950 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🟡 รอดำเนินการ</span>';
+                else if(order.status === 'sending') statusBadge = '<span class="bg-blue-950 text-blue-400 border border-blue-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🔵 กำลังส่งไฟล์รูป</span>';
+                else if(order.status === 'success') statusBadge = '<span class="bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold">🟢 จัดส่งเรียบร้อยแล้ว</span>';
+
+                html += `
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 space-y-2">
+                        <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                            <div>
+                                <span class="text-sm font-bold text-amber-300">${order.nickname}</span> (${order.batchNo})
+                            </div>
+                            <div>${statusBadge}</div>
+                        </div>
+                        <div class="text-[11px] text-slate-300 flex justify-between">
+                            <span>ยอดชำระ: <strong class="text-emerald-400">${order.price} บาท</strong></span>
+                            <span class="text-slate-400">เวลา: ${order.time}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        renderAlbumTabs();
+    </script>
+</body>
+</html>
