@@ -15,7 +15,7 @@
         .glow-emerald { box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3); }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen pb-32 selection:bg-emerald-500 selection:text-slate-950">
+<body class="text-slate-100 min-h-screen pb-16 selection:bg-emerald-500 selection:text-slate-950">
 
     <div class="bg-gradient-to-r from-emerald-950 via-teal-900 to-amber-950 border-b border-emerald-500/40 py-2.5 px-4 text-center shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex items-center justify-center gap-2 text-xs font-bold tracking-wider text-emerald-300">
@@ -45,7 +45,7 @@
         <div class="bg-amber-950/40 border border-amber-500/40 rounded-2xl p-4 flex items-start gap-3 shadow-lg">
             <div class="text-amber-400 text-lg mt-0.5"><i class="fa-solid fa-circle-info"></i></div>
             <div class="text-xs text-amber-200/90 leading-relaxed">
-                <span class="font-bold text-amber-300">วิธีบันทึกรูปในมือถือ:</span> เมื่อกดปุ่มดาวน์โหลด ระบบจะเปิดรูปขึ้นมาใหม่ <strong class="text-white underline">ให้กดค้างที่รูปภาพ</strong> แล้วเลือกเมนู <strong class="text-white underline">"บันทึกภาพ" (Save Image)</strong> เข้ามือถือได้เลยครับ!
+                <span class="font-bold text-amber-300">วิธีบันทึกรูปในมือถือ:</span> <strong class="text-white underline">กดค้างที่รูปภาพ</strong> ที่คุณต้องการ แล้วเลือกเมนู <strong class="text-white underline">"บันทึกภาพ" (Save Image)</strong> เข้ามือถือได้เลยครับ! (ในคอมพิวเตอร์สามารถคลิกเพื่อดาวน์โหลดได้ทันที)
             </div>
         </div>
 
@@ -55,7 +55,7 @@
                     <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
                         <i class="fa-solid fa-folder-open text-amber-400"></i> เลือกอัลบั้มรูปภาพ
                     </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">คลิกเลือกติ๊กถูกที่รูปที่ต้องการ แล้วกดปุ่มดาวน์โหลดด้านล่าง</p>
+                    <p class="text-xs text-slate-400 mt-0.5">กดค้างที่รูปในมือถือเพื่อบันทึก หรือแตะเพื่อดูรูปขนาดใหญ่</p>
                 </div>
                 <div id="albumTabs" class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0"></div>
             </div>
@@ -66,22 +66,15 @@
         </section>
     </main>
 
-    <!-- Floating Download Bar -->
-    <div id="floatingBar" class="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 p-4 backdrop-blur-md z-40 shadow-2xl hidden transition-all duration-300">
-        <div class="container mx-auto max-w-4xl flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 font-black text-lg shadow-inner" id="selectedCount">0</div>
-                <div>
-                    <div class="text-xs text-slate-400 font-medium">เลือกรูปไว้แล้ว</div>
-                    <div class="text-sm font-bold text-emerald-300">พร้อมเปิดรูปเพื่อบันทึก</div>
-                </div>
+    <!-- Modal สำหรับแสดงรูปเดี่ยวขนาดใหญ่ (เพื่อให้มือถือเซฟง่ายขึ้น / หรือคลิกดูชัดๆ) -->
+    <div id="photoModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md hidden items-center justify-center z-50 p-4" onclick="closePhotoModal()">
+        <div class="relative max-w-lg w-full text-center space-y-3" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center bg-slate-900 px-4 py-3 rounded-2xl border border-slate-800">
+                <span class="text-xs font-bold text-amber-300"><i class="fa-solid fa-circle-info mr-1 text-emerald-400"></i>กดค้างที่รูปภาพเพื่อบันทึก (Save Image)</span>
+                <button type="button" onclick="closePhotoModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:bg-red-600 hover:text-white flex items-center justify-center text-xs cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="flex items-center gap-2">
-                <button type="button" onclick="clearSelection()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs cursor-pointer transition-all">ยกเลิก</button>
-                <button type="button" onclick="downloadSelectedPhotos()" class="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl shadow-lg flex items-center gap-2 text-xs sm:text-sm active:scale-95 transition-all cursor-pointer">
-                    <i class="fa-solid fa-download text-amber-300"></i>
-                    <span>ดาวน์โหลดรูป (<span id="btnCount">0</span>)</span>
-                </button>
+            <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 inline-block max-w-full">
+                <img id="modalImg" src="" class="max-h-[70vh] w-auto mx-auto rounded-xl object-contain shadow-2xl select-none">
             </div>
         </div>
     </div>
@@ -91,7 +84,6 @@
 
         let albumsData = {};
         let activeAlbumId = null;
-        let selectedPhotos = {};
 
         function loadData() {
             fetch(WEB_APP_URL)
@@ -150,15 +142,14 @@
 
             let html = '';
             Object.entries(album.photos).forEach(([photoId, photo]) => {
-                const isSelected = selectedPhotos[photoId] ? true : false;
                 html += `
-                    <div onclick="toggleSelect('${photoId}')" class="group relative bg-slate-950 border-2 rounded-2xl overflow-hidden shadow-lg cursor-pointer transition-all duration-200 ${isSelected ? 'border-emerald-500 scale-[0.98] ring-2 ring-emerald-500/40' : 'border-slate-800 hover:border-slate-700'}">
+                    <div onclick="openPhotoModal('${photo.url}')" class="group relative bg-slate-950 border-2 border-slate-800 hover:border-emerald-500 rounded-2xl overflow-hidden shadow-lg cursor-pointer transition-all duration-200">
                         <div class="relative w-full h-40 sm:h-48 bg-slate-900 flex items-center justify-center p-1">
-                            <img src="${photo.url}" class="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105">
-                            <div class="absolute top-2.5 left-2.5 w-7 h-7 rounded-xl flex items-center justify-center text-xs shadow transition-all ${isSelected ? 'bg-emerald-500 text-slate-950 font-black' : 'bg-slate-950/80 text-slate-400 border border-slate-700'}">
-                                ${isSelected ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-regular fa-circle"></i>'}
+                            <img src="${photo.url}" class="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105 pointer-events-none">
+                            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-1.5">
+                                <i class="fa-solid fa-magnifying-glass-plus text-emerald-400"></i> แตะเพื่อดู/บันทึก
                             </div>
-                            <div class="absolute bottom-2.5 right-2.5 bg-slate-950/90 px-2.5 py-0.5 rounded-lg text-[10px] font-black text-amber-400 border border-amber-500/30">
+                            <div class="absolute bottom-2.5 right-2.5 bg-slate-950/90 px-2.5 py-0.5 rounded-lg text-[10px] font-black text-amber-400 border border-amber-500/30 shadow">
                                 ${photo.code || '#IMG'}
                             </div>
                         </div>
@@ -166,67 +157,19 @@
                 `;
             });
             grid.innerHTML = html;
-            updateFloatingBar();
         }
 
-        function toggleSelect(photoId) {
-            if (selectedPhotos[photoId]) {
-                delete selectedPhotos[photoId];
-            } else {
-                for (let aId in albumsData) {
-                    if (albumsData[aId].photos && albumsData[aId].photos[photoId]) {
-                        selectedPhotos[photoId] = albumsData[aId].photos[photoId];
-                        break;
-                    }
-                }
-            }
-            renderPhotos();
+        function openPhotoModal(url) {
+            document.getElementById('modalImg').src = url;
+            const modal = document.getElementById('photoModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
-        function clearSelection() {
-            selectedPhotos = {};
-            renderPhotos();
-        }
-
-        function updateFloatingBar() {
-            const count = Object.keys(selectedPhotos).length;
-            const bar = document.getElementById('floatingBar');
-            document.getElementById('selectedCount').textContent = count;
-            document.getElementById('btnCount').textContent = count;
-
-            if (count > 0) {
-                bar.classList.remove('hidden');
-            } else {
-                bar.classList.add('hidden');
-            }
-        }
-
-        function downloadSelectedPhotos() {
-            const items = Object.values(selectedPhotos);
-            if (items.length === 0) return;
-
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-            if (isMobile) {
-                alert(`ระบบจะเปิดรูปภาพที่เลือกจำนวน ${items.length} รูปในแท็บใหม่\n\n📌 วิธีบันทึก: ให้กดค้างที่รูปภาพแล้วเลือก "บันทึกภาพ" (Save Image) ลงมือถือครับ`);
-                items.forEach((photo, index) => {
-                    setTimeout(() => {
-                        window.open(photo.url, '_blank');
-                    }, index * 600);
-                });
-            } else {
-                alert(`กำลังเริ่มดาวน์โหลดรูปภาพจำนวน ${items.length} รูป กรุณารอสักครู่...`);
-                items.forEach((photo, index) => {
-                    setTimeout(() => {
-                        const a = document.createElement('a');
-                        a.href = photo.url;
-                        a.download = `Photo_${photo.code || index + 1}.jpg`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    }, index * 400);
-                });
-            }
+        function closePhotoModal() {
+            const modal = document.getElementById('photoModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         loadData();
