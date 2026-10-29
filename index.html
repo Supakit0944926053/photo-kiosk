@@ -41,13 +41,21 @@
     </header>
 
     <main class="container mx-auto px-4 py-8 max-w-4xl space-y-6">
+        <!-- กล่องแนะนำวิธีเซฟรูปสำหรับมือถือ -->
+        <div class="bg-amber-950/40 border border-amber-500/40 rounded-2xl p-4 flex items-start gap-3 shadow-lg">
+            <div class="text-amber-400 text-lg mt-0.5"><i class="fa-solid fa-circle-info"></i></div>
+            <div class="text-xs text-amber-200/90 leading-relaxed">
+                <span class="font-bold text-amber-300">วิธีบันทึกรูปในมือถือ:</span> เมื่อกดปุ่มดาวน์โหลด ระบบจะเปิดรูปขึ้นมาใหม่ <strong class="text-white underline">ให้กดค้างที่รูปภาพ</strong> แล้วเลือกเมนู <strong class="text-white underline">"บันทึกภาพ" (Save Image)</strong> เข้ามือถือได้เลยครับ!
+            </div>
+        </div>
+
         <section class="bg-slate-900/80 rounded-3xl p-6 shadow-2xl border border-slate-800 backdrop-blur-xl glow-emerald">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-slate-800 gap-4">
                 <div>
                     <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
                         <i class="fa-solid fa-folder-open text-amber-400"></i> เลือกอัลบั้มรูปภาพ
                     </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">คลิกเลือกติ๊กถูกที่รูปที่ต้องการ แล้วกดดาวน์โหลดด้านล่างสุดได้เลยครับ</p>
+                    <p class="text-xs text-slate-400 mt-0.5">คลิกเลือกติ๊กถูกที่รูปที่ต้องการ แล้วกดปุ่มดาวน์โหลดด้านล่าง</p>
                 </div>
                 <div id="albumTabs" class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0"></div>
             </div>
@@ -65,14 +73,14 @@
                 <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 font-black text-lg shadow-inner" id="selectedCount">0</div>
                 <div>
                     <div class="text-xs text-slate-400 font-medium">เลือกรูปไว้แล้ว</div>
-                    <div class="text-sm font-bold text-emerald-300">พร้อมดาวน์โหลดลงเครื่อง</div>
+                    <div class="text-sm font-bold text-emerald-300">พร้อมเปิดรูปเพื่อบันทึก</div>
                 </div>
             </div>
             <div class="flex items-center gap-2">
                 <button type="button" onclick="clearSelection()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs cursor-pointer transition-all">ยกเลิก</button>
                 <button type="button" onclick="downloadSelectedPhotos()" class="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl shadow-lg flex items-center gap-2 text-xs sm:text-sm active:scale-95 transition-all cursor-pointer">
                     <i class="fa-solid fa-download text-amber-300"></i>
-                    <span>ดาวน์โหลดรูปที่เลือก (<span id="btnCount">0</span>)</span>
+                    <span>ดาวน์โหลดรูป (<span id="btnCount">0</span>)</span>
                 </button>
             </div>
         </div>
@@ -197,18 +205,28 @@
             const items = Object.values(selectedPhotos);
             if (items.length === 0) return;
 
-            alert(`กำลังเริ่มดาวน์โหลดรูปภาพจำนวน ${items.length} รูป กรุณารอสักครู่...`);
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-            items.forEach((photo, index) => {
-                setTimeout(() => {
-                    const a = document.createElement('a');
-                    a.href = photo.url;
-                    a.download = `Photo_${photo.code || index + 1}.jpg`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }, index * 400);
-            });
+            if (isMobile) {
+                alert(`ระบบจะเปิดรูปภาพที่เลือกจำนวน ${items.length} รูปในแท็บใหม่\n\n📌 วิธีบันทึก: ให้กดค้างที่รูปภาพแล้วเลือก "บันทึกภาพ" (Save Image) ลงมือถือครับ`);
+                items.forEach((photo, index) => {
+                    setTimeout(() => {
+                        window.open(photo.url, '_blank');
+                    }, index * 600);
+                });
+            } else {
+                alert(`กำลังเริ่มดาวน์โหลดรูปภาพจำนวน ${items.length} รูป กรุณารอสักครู่...`);
+                items.forEach((photo, index) => {
+                    setTimeout(() => {
+                        const a = document.createElement('a');
+                        a.href = photo.url;
+                        a.download = `Photo_${photo.code || index + 1}.jpg`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    }, index * 400);
+                });
+            }
         }
 
         loadData();
