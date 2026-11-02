@@ -31,7 +31,7 @@
                 <i class="fa-solid fa-camera-retro text-amber-400"></i>
                 ดาวน์โหลดรูปภาพงานฟรี
             </h1>
-            <p class="text-xs text-emerald-200/80 mt-0.5">งานครบรอบ 23 ปีชมรม • ปัญญาชน คนสร้างฝัน</p>
+            <p class="text-xs text-emerald-200/80 mt-0.5">งานครบรอบ 23 ปีชมรม • ปัญญาชน คนสร้างฝัน (พร้อมลายน้ำลิขสิทธิ์)</p>
         </div>
         <div class="flex items-center gap-2">
             <span class="px-3 py-1.5 bg-emerald-950 border border-emerald-500/40 text-emerald-300 text-xs font-bold rounded-xl shadow-inner flex items-center gap-1.5">
@@ -66,7 +66,7 @@
         </section>
     </main>
 
-    <!-- Modal สำหรับแสดงรูปเดี่ยวขนาดใหญ่ (เพื่อให้มือถือเซฟง่ายขึ้น / หรือคลิกดูชัดๆ) -->
+    <!-- Modal สำหรับแสดงรูปเดี่ยวขนาดใหญ่ -->
     <div id="photoModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md hidden items-center justify-center z-50 p-4" onclick="closePhotoModal()">
         <div class="relative max-w-lg w-full text-center space-y-3" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center bg-slate-900 px-4 py-3 rounded-2xl border border-slate-800">
@@ -80,7 +80,8 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwVu8u3CjUSH74NwUtn-r3ayGYZ4gJuqR66p1CDMrbhi0DMhCvE0iZ4r7gbtNjGUsiM/exec";
+        // ใช้ลิงก์ Web App ตัวล่าสุดที่ถูกต้อง
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwSrna0nYGWs2dE7yr1OYMmr1ddDIrHNE-ahEq2E77jU9_pTWtna-MnljGIBH6IUxXw/exec";
 
         let albumsData = {};
         let activeAlbumId = null;
